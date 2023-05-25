@@ -2,6 +2,8 @@
 
 # ========== Setup Dependencies ========== #
 
+# rsync
+
 # SSH keys
 if [! -f id_ed25519 ]; then
     # Keys not present
@@ -29,7 +31,9 @@ if (! which snap >/dev/null); then
 fi
 
 # Multipass
-if (! multipass version >/dev/null); then
+if (multipass version >/dev/null); then
+    echo "Multipass is installed!"
+else
     # Multipass not present
     sudo snap install multipass
 fi
@@ -45,7 +49,7 @@ if (! multipass info quotes >/dev/null); then
     scp -i id_ed25519 -o StrictHostKeyChecking=no setup-server.sh developer@$(multipass info quotes | grep IPv4 | awk '{print $2}'):/home/developer
 
     # Run setup-server script
-    ssh -i id_ed25519 -o StrictHostKeyChecking=no developer@$(multipass info quotes | grep IPv4 | awk '{print $2}') 'bash setup-server.sh'
+    ssh -i id_ed25519 -o StrictHostKeyChecking=no developer@$(multipass info quotes | grep IPv4 | awk '{print $2}') 'bash install-nginx.sh && bash install-node-app.sh && bash setup-service.sh'
 fi
 
 # Check if VM in "Running" state
