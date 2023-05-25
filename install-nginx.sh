@@ -3,7 +3,10 @@
 # ========== Install Nginx ========== #
 
 # Nginx
-if (! which nginx >/dev/null); then
+if ( which nginx >/dev/null ) 
+then
+    echo "Nginx Present"
+else
     sudo apt update
 
     # Install signing dependencies
@@ -34,17 +37,25 @@ fi
 # ========== Configure Nginx Server ========== #
 
 # Copy relativepath.conf to /etc/nginx/sites-available directory.
-if [! -f /etc/nginx/sites-available/quotes ]; then
+if [ -f /etc/nginx/sites-available/quotes ] 
+then
+    echo "Server Config Already Copied"
+else
+    echo "Copying Server Config"
     sudo cp ~/server.conf /etc/nginx/sites-available/quotes
 fi
 
 # Check for old symlink to Nginx default site
-if [ -L /etc/nginx/sites-enabled/default ]; then
+if [ -L /etc/nginx/sites-enabled/default ]
+then
+    echo "Removing Old Server Config"
     sudo rm /etc/nginx/sites-enabled/default
 fi
 
 # Create symlink in /etc/nginx/sites-enabled directory
-if [ -L /etc/nginx/sites-enabled/quotes ]; then
+if [ -L /etc/nginx/sites-enabled/quotes ] 
+then
+    echo "Symlinks Properly Configured"
 else
     sudo ln -s /etc/nginx/sites-available/quotes /etc/nginx/sites-enabled/quotes
 fi
